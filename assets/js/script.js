@@ -98,7 +98,6 @@ expenseForm.addEventListener('submit', (e) => {
     console.log('please enter budget amount');
   }
 });
-
 // new list add function
 const newList = () => {
 
