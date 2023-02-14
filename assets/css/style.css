@@ -1,0 +1,284 @@
+@charset "utf-8";
+/* ==========================================================================
+   1. CSS Reset Code
+   ========================================================================== */
+
+/* 1.1. Eric Meyers Reset
+   http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+   ========================================================================== */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img,
+ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center,
+dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody,
+tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure,
+figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+/* Force scrollbar */
+html { overflow-y: scroll; }
+
+/* Align radios and text inputs with their label */
+
+input[type='radio'] { vertical-align: text-bottom; }
+
+/* Hand cursor on clickable input elements */
+label,
+input[type='button'],
+input[type='submit'],
+button {
+  cursor: pointer;
+}
+
+strong {
+  font-weight: bold;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+em { font-style: italic; }
+
+img {
+  width: 100%;
+  border: 0;
+  vertical-align: middle;
+}
+
+sub,
+sup {
+  vertical-align: baseline;
+  position: relative;
+  font-size: 55%;
+  line-height: 0;
+}
+
+sup { top: -.7em; }
+sub { bottom: -.25em; }
+
+/* 1.2. Clear Fix
+   ========================== */
+
+.cf:before,
+.cf:after {
+  display: table;
+  content: " ";
+}
+
+.cf:after { clear: both; }
+.cf { *zoom: 1; }
+
+/*for all*/
+*,*::before,*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+a { 
+  display: inline-block;
+  text-decoration: none; 
+}
+
+li {
+  display: inline-block;
+  list-style-type: none;
+}
+
+/*for wrapper*/
+.wrapper {
+  max-width: 1360px;
+  width: 86%; 
+  margin: 0 auto;
+}
+/*=================================
+  Header styling starts here
+=================================*/
+
+
+
+
+
+
+/*=================================
+  Header styling ends here
+=================================*/  
+
+/*=================================
+  main styling starts here
+=================================*/
+.main-container{
+  display: flex;
+  gap: 90px;
+}
+
+.budget-container { flex-basis: 40%; }
+.dashboard { flex-basis: 50%; }
+
+h1 {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+form {
+  margin: 30px 0 50px;
+}
+
+.budget-form,.expense-form {
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.budget-form { border: 2px solid #476B3F; }
+.expense-form { border: 2px solid red; }
+
+.input-group {
+  padding: 10px 0 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.budget-amount,.budget-form .input-control input { border: 1px solid #476B3F; }
+.expense-amount,.expense-name,.expense-form .input-control input { border: 1px solid red; }
+
+input {
+  padding: 6px 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  outline: none;
+}
+
+.budget-form .input-control input,.budget-value,.balance-value { color: #476B3F; }
+.expense-form .input-control input,.expense-value,.result-name,.result-amount { color: #B62F31; }
+.input-control input { padding: 6px 10px; }
+
+.dashboard {
+  margin-top: 40px;
+}
+
+.budget-data,.final-result {
+  display: flex;
+  flex-direction: column;
+}
+
+.budget-headings {
+  margin-bottom: 80px;
+}
+.budget-headings li {
+  position: relative
+}
+.budget-headings h2 { font-weight: bold; }
+
+.budget-headings h2::after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%,150%);
+  font-family: 'FontAwesome';
+  font-size: 40px;
+  color: #06658F;
+}
+
+.budget-icon::after { content: '\f0d6'; }
+.expense-icon::after { content: '\f09d'; }
+.balance-icon::after { content: '\24'; }
+
+
+.result-title {
+  margin: 60px 0 10px;
+  display: flex;
+}
+
+.result-title li { flex-basis: 40%; }
+
+.budget-headings,.budget-price {
+  display: flex;
+  justify-content: space-between;
+}
+
+.item-store {
+  display: flex;
+}
+.result-amount { text-align: center; }
+.result-name { text-transform: uppercase;; }
+.item-store > li { 
+  padding: 5px 0;
+  flex-basis: 40%;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+
+.edit-btn,.delete-btn {
+  text-indent: -9999px;
+}
+
+.edit-btn::before,.delete-btn::before {
+  text-indent: 0;
+  float: left;
+  font-family: 'FontAwesome';
+}
+
+.edit-btn::before { 
+  content: '\f044';
+  color: #07678F;
+}
+.delete-btn::before { 
+  content: '\f1f8';
+  color: #B62F31;
+}
+
+.budget-price h3 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+
+/*=================================
+  main styling ends here
+=================================*/
+
+/*=================================
+  footer styling starts here
+=================================*/ 
+
+
+
+
+
+
+
+ /*=================================
+  footer styling ends here
+=================================*/ 
+
+/*media query starts*/
+/*media query for 995px starts here*/
+@media only screen and (max-width: 995px) {
+
+
+
+}  
