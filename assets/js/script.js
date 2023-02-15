@@ -12,9 +12,27 @@ const budgetInput = document.querySelector('.budget-amount'),
 let data = JSON.parse(localStorage.getItem('itemName'));
 let collection = data ? data : [], editId = null;
 
+// function to add new list of expenses
+const newList = () => {
+  const dataObj = {
+    name: expenseInput.value,
+    amount: expenseAmtInput.value,
+  }
+  if (editId === null) {
+    collection.push(dataObj);
+  } else {
+    collection[editId] = dataObj;
+    editId = null;
+  }
+  localStorage.setItem('itemName', JSON.stringify(collection));
+  dataLoad();
+  expenseInput.value = "";
+  expenseAmtInput.value = "";
+};
+// function to create list of expense
 const dataLoad = () => {
   if (collection != null) {
-    var li = '';
+    let li = '';
     collection.forEach((list, index) => {
       li += ` <li class="data-list">
       <ul class="item-store">
@@ -33,12 +51,13 @@ const dataLoad = () => {
     calculator(collection);
     // Delete function
     if (finalResult.children.length != 0) {
-      var deleteBtn = document.querySelectorAll('.delete-btn');
+      const deleteBtn = document.querySelectorAll('.delete-btn');
       deleteBtn.forEach((delBtn) => {
         delBtn.addEventListener('click', () => {
-          var delIndex = delBtn.dataset.del;
-          editId = null;
+          const delIndex = delBtn.dataset.del;
+          const prevobj = collection[editId];
           collection.splice(delIndex, 1);
+          editId = collection.indexOf(prevobj);
           localStorage.setItem('itemName', JSON.stringify(collection));
           dataLoad();
         });
@@ -46,8 +65,8 @@ const dataLoad = () => {
     }
     // Edit function
     if (finalResult.children.length != 0) {
-      var editBtn = document.querySelectorAll('.edit-btn');
-      editBtn.forEach(function (edBtn, ind) {
+      let editBtn = document.querySelectorAll('.edit-btn');
+      editBtn.forEach((edBtn, ind) => {
         edBtn.addEventListener('click', () => {
           const resultName = document.querySelectorAll('.result-name');
           const resultAmount = document.querySelectorAll('.result-amount');
@@ -58,64 +77,68 @@ const dataLoad = () => {
       })
     };
   }
-
 };
+// function to calculate expenses and budget
 const calculator = (collection) => {
   let priceArr = [];
-  let budget = JSON.parse(localStorage.getItem('budget'));
-  if (budget != 0) {
-    collection.forEach(obj => {
-      priceArr.push(parseFloat(obj.amount));
-    });
+  let getBudget = JSON.parse(localStorage.getItem('budget'));
+  collection.forEach(obj => {
+    priceArr.push(parseFloat(obj.amount));
+  });
+  if (getBudget != null) {
     let expenseSum = priceArr.reduce((a, b) => a + b, 0);
     localStorage.setItem('expenseSum', JSON.stringify(expenseSum));
-    budgetValue.innerText = `$ ${budget}`;
+    budgetValue.innerText = `$ ${getBudget}`;
     expenseValue.innerText = `$ ${expenseSum}`;
-    balanceValue.innerText = `$ ${budget - expenseSum}`;
+    balanceValue.innerText = `$ ${getBudget - expenseSum}`;
   }
 };
-// initial data load
-document.load = dataLoad();
+// function to create errors
+const createError = (input, errorMsg) => {
+  const inputGroup = input.parentElement,
+    error = document.createElement("span");
+  error.className = "error";
+  error.innerText = errorMsg;
+  inputGroup.appendChild(error);
+};
+// function to validate inputs
+const inputValidation = (input) => {
+  const activeError = input.parentElement.querySelector(".error"),
+    isvalid = true;
+  if (activeError) {
+    activeError.remove();
+  }
+  if (!input.value) {
+    createError(input, "*field is required");
+    return isvalid = false;
+  } else {
+    return isvalid;
+  }
+};
 
+let errorGet = document.querySelectorAll(".error");
 budgetForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  localStorage.setItem('budget', JSON.stringify(+budgetInput.value));
-  calculator(collection);
+  inputValidation(budgetInput);
+  if (isvalid == true && errorGet.length === 0) {
+    localStorage.setItem('budget', JSON.stringify(+budgetInput.value));
+    calculator(collection);
+  }
 });
 
 expenseForm.addEventListener('submit', (e) => {
   e.preventDefault();
   let budget = JSON.parse(localStorage.getItem('budget'));
-  let totalExpense = JSON.parse(localStorage.getItem('expenseSum'));
-  if (expenseInput.value.trim() != "" && expenseAmtInput.value != "") {
-    console.log(budget > totalExpense);
-    if(budget > totalExpense){
-      newList();
-    } else {
-      console.log('dont have enough budget');
-    }
-  } else {
-    console.log('please enter budget amount');
-  }
+  inputValidation(budgetInput);
+  inputValidation(expenseInput);
+  inputValidation(expenseAmtInput);
+  if (isvalid == true && errorGet.length === 0 && (budget != 0 || budget != null)) {
+    newList();
+  };
 });
-// new list add function
-const newList = () => {
+// initial data load
+document.load = dataLoad();
 
-  var dataObj = {
-    name: expenseInput.value,
-    amount: expenseAmtInput.value,
-  }
-  if (editId === null) {
-    collection.push(dataObj);
-  } else {
-    collection[editId] = dataObj;
-  }
-  localStorage.setItem('itemName', JSON.stringify(collection));
-  dataLoad();
-  expenseInput.value = "";
-  expenseAmtInput.value = "";
-  editId = null;
-}
 
 
 

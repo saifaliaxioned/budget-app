@@ -167,8 +167,10 @@ input {
 }
 
 .budget-form .input-control input,.budget-value,.balance-value { color: #476B3F; }
-.expense-form .input-control input,.expense-value,.result-name,.result-amount { color: #B62F31; }
+.expense-form .input-control input,.expense-value,.result-name,.result-amount,.error { color: #B62F31; }
 .input-control input { padding: 6px 10px; }
+
+.error { font-size: 10px; }
 
 .dashboard {
   margin-top: 40px;
