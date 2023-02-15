@@ -10,7 +10,7 @@ const budgetInput = document.querySelector('.budget-amount'),
   balanceValue = document.querySelector('.balance-value');
 
 let data = JSON.parse(localStorage.getItem('itemName'));
-let collection = data ? data : [], editId = null,isvalid;
+let collection = data ? data : [], editId = null, isvalid;
 let budget = JSON.parse(localStorage.getItem('budget'));
 budgetInput.value = budget;
 
@@ -21,6 +21,7 @@ const newList = () => {
     amount: expenseAmtInput.value,
   }
   if (editId === null) {
+    // editId = null;
     collection.push(dataObj);
   } else {
     collection[editId] = dataObj;
@@ -31,6 +32,7 @@ const newList = () => {
   expenseInput.value = "";
   expenseAmtInput.value = "";
 };
+
 // function to create list of expense
 const dataLoad = () => {
   if (collection != null) {
@@ -43,7 +45,7 @@ const dataLoad = () => {
                 <li class="store-list">
                   <ul class="controls">
                     <li><a href="#FIXME" class="edit-btn" title="Edit">edit</a></li>
-                    <li><a href="#FIXME" class="delete-btn" data-del="${index}" title="Delete">delete</a></li>
+                    <li><a href="#FIXME" class="delete-btn" title="Delete">delete</a></li>
                   </ul>
                 </li>
               </ul>
@@ -51,23 +53,38 @@ const dataLoad = () => {
     });
     finalResult.innerHTML = li;
     calculator(collection);
+
     // Delete function
-    if (finalResult.children.length != 0) {
-      const deleteBtn = document.querySelectorAll('.delete-btn');
-      deleteBtn.forEach((delBtn) => {
+    const deleteBtn = document.querySelectorAll('.delete-btn');
+    if (deleteBtn) {
+      deleteBtn.forEach((delBtn, index) => {
         delBtn.addEventListener('click', () => {
-          const delIndex = delBtn.dataset.del;
-          const prevobj = collection[editId];
-          collection.splice(delIndex, 1);
-          editId = collection.indexOf(prevobj);
-          localStorage.setItem('itemName', JSON.stringify(collection));
-          dataLoad();
+          if (editId == null) {
+            collection.splice(index, 1);
+            localStorage.setItem('itemName', JSON.stringify(collection));
+            dataLoad();
+          } else {
+            if (editId === index) {
+              editId = null;
+              collection.splice(index, 1);
+              localStorage.setItem('itemName', JSON.stringify(collection));
+              dataLoad();
+            } else {
+              const prevobj = collection[editId];
+              collection.splice(index, 1);
+              localStorage.setItem('itemName', JSON.stringify(collection));
+              editId = collection.indexOf(prevobj);
+              console.log(editId);
+              dataLoad();
+            }
+          }
         });
       })
     }
+
     // Edit function
-    if (finalResult.children.length != 0) {
-      let editBtn = document.querySelectorAll('.edit-btn');
+    const editBtn = document.querySelectorAll('.edit-btn');
+    if (editBtn) {
       editBtn.forEach((edBtn, ind) => {
         edBtn.addEventListener('click', () => {
           const resultName = document.querySelectorAll('.result-name');
@@ -80,6 +97,7 @@ const dataLoad = () => {
     };
   }
 };
+
 // function to calculate expenses and budget
 const calculator = (collection) => {
   let priceArr = [];
@@ -95,6 +113,7 @@ const calculator = (collection) => {
     balanceValue.innerText = `$ ${getBudget - expenseSum}`;
   }
 };
+
 // function to create errors
 const createError = (input, errorMsg) => {
   const inputGroup = input.parentElement,
@@ -103,10 +122,11 @@ const createError = (input, errorMsg) => {
   error.innerText = errorMsg;
   inputGroup.appendChild(error);
 };
+
 // function to validate inputs
 const inputValidation = (input) => {
   const activeError = input.parentElement.querySelector(".error");
-    isvalid = true;
+  isvalid = true;
   if (activeError) {
     activeError.remove();
   }
@@ -117,6 +137,7 @@ const inputValidation = (input) => {
     return isvalid;
   }
 };
+
 // event to add budget
 budgetForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -127,6 +148,7 @@ budgetForm.addEventListener('submit', (e) => {
     calculator(collection);
   }
 });
+
 // event to add expenses
 expenseForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -139,6 +161,7 @@ expenseForm.addEventListener('submit', (e) => {
     newList();
   };
 });
+
 // initial data load
 document.load = dataLoad();
 
