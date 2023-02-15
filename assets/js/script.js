@@ -53,48 +53,8 @@ const dataLoad = () => {
     });
     finalResult.innerHTML = li;
     calculator(collection);
-
-    // Delete function
-    const deleteBtn = document.querySelectorAll('.delete-btn');
-    if (deleteBtn) {
-      deleteBtn.forEach((delBtn, index) => {
-        delBtn.addEventListener('click', () => {
-          if (editId == null) {
-            collection.splice(index, 1);
-            localStorage.setItem('itemName', JSON.stringify(collection));
-            dataLoad();
-          } else {
-            if (editId === index) {
-              editId = null;
-              collection.splice(index, 1);
-              localStorage.setItem('itemName', JSON.stringify(collection));
-              dataLoad();
-            } else {
-              const prevobj = collection[editId];
-              collection.splice(index, 1);
-              localStorage.setItem('itemName', JSON.stringify(collection));
-              editId = collection.indexOf(prevobj);
-              console.log(editId);
-              dataLoad();
-            }
-          }
-        });
-      })
-    }
-
-    // Edit function
-    const editBtn = document.querySelectorAll('.edit-btn');
-    if (editBtn) {
-      editBtn.forEach((edBtn, ind) => {
-        edBtn.addEventListener('click', () => {
-          const resultName = document.querySelectorAll('.result-name');
-          const resultAmount = document.querySelectorAll('.result-amount');
-          editId = ind;
-          expenseInput.value = resultName[ind].innerText;
-          expenseAmtInput.value = resultAmount[ind].innerText;
-        })
-      })
-    };
+    editExpense();
+    deleteExpense();
   }
 };
 
@@ -162,13 +122,51 @@ expenseForm.addEventListener('submit', (e) => {
   };
 });
 
+// Delete function
+const deleteExpense = () => {
+  const deleteBtn = document.querySelectorAll('.delete-btn');
+  if (deleteBtn) {
+    deleteBtn.forEach((delBtn, index) => {
+      delBtn.addEventListener('click', () => {
+        if (editId == null) {
+          collection.splice(index, 1);
+          localStorage.setItem('itemName', JSON.stringify(collection));
+        } else {
+          if (editId === index) {
+            editId = null;
+            collection.splice(index, 1);
+            localStorage.setItem('itemName', JSON.stringify(collection));
+          } else {
+            const prevobj = collection[editId];
+            collection.splice(index, 1);
+            editId = collection.indexOf(prevobj);
+            localStorage.setItem('itemName', JSON.stringify(collection));
+          }
+        }
+        dataLoad();
+      });
+    })
+  }
+}
+
+// Edit function
+const editExpense = () => {
+  const editBtn = document.querySelectorAll('.edit-btn');
+  if (editBtn) {
+    editBtn.forEach((edBtn, ind) => {
+      edBtn.addEventListener('click', () => {
+        const resultName = document.querySelectorAll('.result-name');
+        const resultAmount = document.querySelectorAll('.result-amount');
+        editId = ind;
+        expenseInput.value = resultName[ind].innerText;
+        expenseAmtInput.value = resultAmount[ind].innerText;
+      })
+    })
+  };
+}
+
 // initial data load
 document.load = dataLoad();
-
-
-
-
-
 
 
 
