@@ -89,7 +89,7 @@ const createError = (input, errorMsg) => {
 // function to validate inputs
 const inputValidation = (input) => {
   const activeError = input.parentElement.querySelector(".error");
-  // const totalExpense = JSON.parse(localStorage.getItem('expenseSum'));
+  budget = +budgetInput.value;
   isvalid = true;
   if (activeError) {
     activeError.remove();
@@ -99,8 +99,16 @@ const inputValidation = (input) => {
     return isvalid = false;
   } else {
     if (input.classList.contains('expense-amount')) {
-      if (budget <= input.value && budget >= totalExpense) {
+      if (budget <= +input.value && budget >= totalExpense) {
         createError(input, "*you don't have enough budget");
+        return isvalid = false;
+      } else {
+        return isvalid;
+      }
+    }
+    if (input.classList.contains('budget-amount')) {
+      if (input.value <= 0 || budget < totalExpense) {
+        createError(input, "*your expense amount is greater");
         return isvalid = false;
       } else {
         return isvalid;
@@ -111,9 +119,9 @@ const inputValidation = (input) => {
 };
 
 // event to validate 
-// expenseAmtInput.addEventListener('keyup', () => {
-//   inputValidation(expenseAmtInput);
-// });
+expenseAmtInput.addEventListener('keyup', () => {
+  inputValidation(expenseAmtInput);
+});
 
 // event to add budget
 budgetForm.addEventListener('submit', (e) => {
@@ -129,6 +137,7 @@ budgetForm.addEventListener('submit', (e) => {
 // event to add expenses
 expenseForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  console.log('working');
   let budget = JSON.parse(localStorage.getItem('budget'));
   inputValidation(budgetInput);
   inputValidation(expenseInput);
