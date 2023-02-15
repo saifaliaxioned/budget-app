@@ -11,6 +11,8 @@ const budgetInput = document.querySelector('.budget-amount'),
 
 let data = JSON.parse(localStorage.getItem('itemName'));
 let collection = data ? data : [], editId = null,isvalid;
+let budget = JSON.parse(localStorage.getItem('budget'));
+budgetInput.value = budget;
 
 // function to add new list of expenses
 const newList = () => {
