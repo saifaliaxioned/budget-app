@@ -12,6 +12,7 @@ const budgetInput = document.querySelector('.budget-amount'),
 let data = JSON.parse(localStorage.getItem('itemName'));
 let collection = data ? data : [], editId = null, isvalid;
 let budget = JSON.parse(localStorage.getItem('budget'));
+let totalExpense;
 budgetInput.value = budget;
 
 // function to add new list of expenses
@@ -37,7 +38,7 @@ const newList = () => {
 const dataLoad = () => {
   if (collection != null) {
     let li = '';
-    collection.forEach((list, index) => {
+    collection.forEach((list) => {
       li += ` <li class="data-list">
       <ul class="item-store">
                 <li class="store-list result-name">${list.name}</li>
@@ -55,8 +56,10 @@ const dataLoad = () => {
     calculator(collection);
     editExpense();
     deleteExpense();
+    totalExpense = JSON.parse(localStorage.getItem('expenseSum'));
   }
 };
+
 
 // function to calculate expenses and budget
 const calculator = (collection) => {
@@ -86,6 +89,7 @@ const createError = (input, errorMsg) => {
 // function to validate inputs
 const inputValidation = (input) => {
   const activeError = input.parentElement.querySelector(".error");
+  // const totalExpense = JSON.parse(localStorage.getItem('expenseSum'));
   isvalid = true;
   if (activeError) {
     activeError.remove();
@@ -94,9 +98,22 @@ const inputValidation = (input) => {
     createError(input, "*field is required");
     return isvalid = false;
   } else {
+    if (input.classList.contains('expense-amount')) {
+      if (budget <= input.value && budget >= totalExpense) {
+        createError(input, "*you don't have enough budget");
+        return isvalid = false;
+      } else {
+        return isvalid;
+      }
+    }
     return isvalid;
   }
 };
+
+// event to validate 
+// expenseAmtInput.addEventListener('keyup', () => {
+//   inputValidation(expenseAmtInput);
+// });
 
 // event to add budget
 budgetForm.addEventListener('submit', (e) => {
@@ -125,45 +142,41 @@ expenseForm.addEventListener('submit', (e) => {
 // Delete function
 const deleteExpense = () => {
   const deleteBtn = document.querySelectorAll('.delete-btn');
-  if (deleteBtn) {
-    deleteBtn.forEach((delBtn, index) => {
-      delBtn.addEventListener('click', () => {
-        if (editId == null) {
+  deleteBtn.forEach((delBtn, index) => {
+    delBtn.addEventListener('click', () => {
+      if (editId == null) {
+        collection.splice(index, 1);
+        localStorage.setItem('itemName', JSON.stringify(collection));
+      } else {
+        if (editId === index) {
+          editId = null;
           collection.splice(index, 1);
           localStorage.setItem('itemName', JSON.stringify(collection));
         } else {
-          if (editId === index) {
-            editId = null;
-            collection.splice(index, 1);
-            localStorage.setItem('itemName', JSON.stringify(collection));
-          } else {
-            const prevobj = collection[editId];
-            collection.splice(index, 1);
-            editId = collection.indexOf(prevobj);
-            localStorage.setItem('itemName', JSON.stringify(collection));
-          }
+          const prevobj = collection[editId];
+          collection.splice(index, 1);
+          editId = collection.indexOf(prevobj);
+          localStorage.setItem('itemName', JSON.stringify(collection));
         }
-        dataLoad();
-      });
-    })
-  }
-}
+      }
+      dataLoad();
+    });
+  });
+};
 
 // Edit function
 const editExpense = () => {
   const editBtn = document.querySelectorAll('.edit-btn');
-  if (editBtn) {
-    editBtn.forEach((edBtn, ind) => {
-      edBtn.addEventListener('click', () => {
-        const resultName = document.querySelectorAll('.result-name');
-        const resultAmount = document.querySelectorAll('.result-amount');
-        editId = ind;
-        expenseInput.value = resultName[ind].innerText;
-        expenseAmtInput.value = resultAmount[ind].innerText;
-      })
-    })
-  };
-}
+  editBtn.forEach((edBtn, ind) => {
+    edBtn.addEventListener('click', () => {
+      const resultName = document.querySelectorAll('.result-name');
+      const resultAmount = document.querySelectorAll('.result-amount');
+      editId = ind;
+      expenseInput.value = resultName[ind].innerText;
+      expenseAmtInput.value = resultAmount[ind].innerText;
+    });
+  });
+};
 
 // initial data load
 document.load = dataLoad();
