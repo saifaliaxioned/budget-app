@@ -13,6 +13,7 @@ let collection = data ? data : [], editId = null, isvalid;
 let budget = JSON.parse(localStorage.getItem('budget'));
 let totalExpense;
 budgetInput.value = budget;
+
 // function to add new list of expenses
 const newList = () => {
   const dataObj = {
@@ -20,7 +21,6 @@ const newList = () => {
     amount: expenseAmtInput.value,
   }
   if (editId === null) {
-    // editId = null;
     collection.push(dataObj);
   } else {
     collection[editId] = dataObj;
@@ -31,6 +31,7 @@ const newList = () => {
   expenseInput.value = "";
   expenseAmtInput.value = "";
 };
+
 // function to create list of expense
 const dataLoad = () => {
   if (collection != null) {
@@ -56,6 +57,7 @@ const dataLoad = () => {
     totalExpense = JSON.parse(localStorage.getItem('expenseSum'));
   }
 };
+
 // function to calculate expenses and budget
 const calculator = (collection) => {
   let priceArr = [];
@@ -71,6 +73,7 @@ const calculator = (collection) => {
     balanceValue.innerText = `$ ${getBudget - expenseSum}`;
   }
 };
+
 // function to create errors
 const createError = (input, errorMsg) => {
   const inputGroup = input.parentElement,
@@ -79,6 +82,7 @@ const createError = (input, errorMsg) => {
   error.innerText = errorMsg;
   inputGroup.appendChild(error);
 };
+
 // function to validate inputs
 const inputValidation = (input) => {
   const activeError = input.parentElement.querySelector(".error");
@@ -101,8 +105,6 @@ const inputValidation = (input) => {
         totalAmount = budget - (totalExpense + +input.value);
       }
       budgetExpense = budget - totalExpense;
-      console.log(totalExpense,totalAmount,budgetExpense);
-      console.log((collection.length != 0),(totalAmount < 0),((budget <= +input.value) || (+input.value >= budgetExpense)));
       if (((budget <= +input.value) || (+input.value >= budgetExpense)) && collection.length != 0 && totalAmount < 0) {
         createError(input, "*you don't have enough budget");
         return isvalid = false;
@@ -121,10 +123,12 @@ const inputValidation = (input) => {
     return isvalid;
   }
 };
+
 // event to validate
 expenseAmtInput.addEventListener('keyup', () => {
   inputValidation(expenseAmtInput);
 });
+
 // event to add budget
 budgetForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -135,11 +139,11 @@ budgetForm.addEventListener('submit', (e) => {
     calculator(collection);
   }
 });
+
 // event to add expenses
 expenseForm.addEventListener('submit', (e) => {
   e.preventDefault();
   let budget = JSON.parse(localStorage.getItem('budget'));
-  // inputValidation(budgetInput);
   inputValidation(expenseInput);
   inputValidation(expenseAmtInput);
   let errorGet = expenseForm.querySelectorAll(".error");
@@ -147,6 +151,7 @@ expenseForm.addEventListener('submit', (e) => {
     newList();
   };
 });
+
 // Delete function
 const deleteExpense = () => {
   const deleteBtn = document.querySelectorAll('.delete-btn');
@@ -171,6 +176,7 @@ const deleteExpense = () => {
     });
   });
 };
+
 // Edit function
 const editExpense = () => {
   const editBtn = document.querySelectorAll('.edit-btn');
@@ -184,6 +190,7 @@ const editExpense = () => {
     });
   });
 };
+
 // initial data load
 document.load = dataLoad();
 
