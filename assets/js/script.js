@@ -105,7 +105,7 @@ const inputValidation = (input) => {
         totalAmount = budget - (totalExpense + +input.value);
       }
       budgetExpense = budget - totalExpense;
-      if (((budget <= +input.value) || (+input.value >= budgetExpense)) && collection.length != 0 && totalAmount < 0) {
+      if (((budget <= +input.value) || (+input.value >= budgetExpense)) && totalAmount < 0) {
         createError(input, "*you don't have enough budget");
         return isvalid = false;
       } else {
