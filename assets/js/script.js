@@ -8,13 +8,11 @@ const budgetInput = document.querySelector('.budget-amount'),
   budgetValue = document.querySelector('.budget-value'),
   expenseValue = document.querySelector('.expense-value'),
   balanceValue = document.querySelector('.balance-value');
-
 let data = JSON.parse(localStorage.getItem('itemName'));
 let collection = data ? data : [], editId = null, isvalid;
 let budget = JSON.parse(localStorage.getItem('budget'));
 let totalExpense;
 budgetInput.value = budget;
-
 // function to add new list of expenses
 const newList = () => {
   const dataObj = {
@@ -33,7 +31,6 @@ const newList = () => {
   expenseInput.value = "";
   expenseAmtInput.value = "";
 };
-
 // function to create list of expense
 const dataLoad = () => {
   if (collection != null) {
@@ -59,8 +56,6 @@ const dataLoad = () => {
     totalExpense = JSON.parse(localStorage.getItem('expenseSum'));
   }
 };
-
-
 // function to calculate expenses and budget
 const calculator = (collection) => {
   let priceArr = [];
@@ -76,7 +71,6 @@ const calculator = (collection) => {
     balanceValue.innerText = `$ ${getBudget - expenseSum}`;
   }
 };
-
 // function to create errors
 const createError = (input, errorMsg) => {
   const inputGroup = input.parentElement,
@@ -85,7 +79,6 @@ const createError = (input, errorMsg) => {
   error.innerText = errorMsg;
   inputGroup.appendChild(error);
 };
-
 // function to validate inputs
 const inputValidation = (input) => {
   const activeError = input.parentElement.querySelector(".error");
@@ -99,7 +92,18 @@ const inputValidation = (input) => {
     return isvalid = false;
   } else {
     if (input.classList.contains('expense-amount')) {
-      if (budget <= +input.value && budget >= totalExpense) {
+      let totalAmount,budgetExpense;
+      if (editId != null) {
+        totalExpense = +input.value;
+        totalAmount = budget - totalExpense;
+      } else {
+        totalExpense;
+        totalAmount = budget - (totalExpense + +input.value);
+      }
+      budgetExpense = budget - totalExpense;
+      console.log(totalExpense,totalAmount,budgetExpense);
+      console.log((collection.length != 0),(totalAmount < 0),((budget <= +input.value) || (+input.value >= budgetExpense)));
+      if (((budget <= +input.value) || (+input.value >= budgetExpense)) && collection.length != 0 && totalAmount < 0) {
         createError(input, "*you don't have enough budget");
         return isvalid = false;
       } else {
@@ -117,37 +121,32 @@ const inputValidation = (input) => {
     return isvalid;
   }
 };
-
-// event to validate 
+// event to validate
 expenseAmtInput.addEventListener('keyup', () => {
   inputValidation(expenseAmtInput);
 });
-
 // event to add budget
 budgetForm.addEventListener('submit', (e) => {
   e.preventDefault();
   inputValidation(budgetInput);
-  let errorGet = document.querySelectorAll(".error");
-  if (isvalid == true && errorGet.length === 0) {
+  let errorGet = budgetForm.querySelector(".error");
+  if (isvalid == true && errorGet === null) {
     localStorage.setItem('budget', JSON.stringify(+budgetInput.value));
     calculator(collection);
   }
 });
-
 // event to add expenses
 expenseForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  console.log('working');
   let budget = JSON.parse(localStorage.getItem('budget'));
-  inputValidation(budgetInput);
+  // inputValidation(budgetInput);
   inputValidation(expenseInput);
   inputValidation(expenseAmtInput);
-  let errorGet = document.querySelectorAll(".error");
+  let errorGet = expenseForm.querySelectorAll(".error");
   if (isvalid == true && errorGet.length === 0 && (budget != 0) && (budget != null)) {
     newList();
   };
 });
-
 // Delete function
 const deleteExpense = () => {
   const deleteBtn = document.querySelectorAll('.delete-btn');
@@ -172,7 +171,6 @@ const deleteExpense = () => {
     });
   });
 };
-
 // Edit function
 const editExpense = () => {
   const editBtn = document.querySelectorAll('.edit-btn');
@@ -186,7 +184,6 @@ const editExpense = () => {
     });
   });
 };
-
 // initial data load
 document.load = dataLoad();
 
